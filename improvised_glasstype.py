@@ -148,12 +148,12 @@ if 'Count Plot' in plot_types:
   st.pyplot()
 
 if 'Pie Chart' in plot_types:
-  st.subheader("Pie Chart")
-  pie_data = glass_df['GlassType'].values_counts()
-  plt.figure(figsize = (12,6))
-
-  plt.pie(pie_data,labels = pie_data.index,startangle = 30,explode = np.linspace(0.06,0.16,6))
-  st.pyplot()
+    st.subheader("Pie Chart")
+    pie_data = glass_df['GlassType'].value_counts()
+    plt.figure(figsize = (5, 5))
+    plt.pie(pie_data, labels = pie_data.index, autopct = '%1.2f%%', 
+            startangle = 30, explode = np.linspace(.06, .16, 6))
+    st.pyplot()
 
 if 'Correlation Heatmap' in plot_types:
   st.subheader("Correlation Heatmap")
