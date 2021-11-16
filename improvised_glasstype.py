@@ -171,3 +171,61 @@ if 'Pair Plot' in plot_types:
 
   sns.pairplot(glass_df)
   st.pyplot()
+# Add 9 slider widgets for accepting user input for 9 features.
+st.sidebar.subheader("Select your values:")
+ri = st.sidebar.slider("Input Ri", float(glass_df['RI'].min()), float(glass_df['RI'].max()))
+na = st.sidebar.slider("Input Na", float(glass_df['Na'].min()), float(glass_df['Na'].max()))
+mg = st.sidebar.slider("Input Mg", float(glass_df['Mg'].min()), float(glass_df['Mg'].max()))
+al = st.sidebar.slider("Input Al", float(glass_df['Al'].min()), float(glass_df['Al'].max()))
+si = st.sidebar.slider("Input Si", float(glass_df['Si'].min()), float(glass_df['Si'].max()))
+k = st.sidebar.slider("Input K", float(glass_df['K'].min()), float(glass_df['K'].max()))
+ca = st.sidebar.slider("Input Ca", float(glass_df['Ca'].min()), float(glass_df['Ca'].max()))
+ba = st.sidebar.slider("Input Ba", float(glass_df['Ba'].min()), float(glass_df['Ba'].max()))
+fe = st.sidebar.slider("Input Fe", float(glass_df['Fe'].min()), float(glass_df['Fe'].max()))
+
+# Add a subheader and multiselect widget.
+# Add a subheader in the sidebar with label "Choose Classifier"
+st.sidebar.subheader("Choose Classifier")
+
+# Add a selectbox in the sidebar with label 'Classifier'.
+# and with 2 options passed as a tuple ('Support Vector Machine', 'Random Forest Classifier').
+# Store the current value of this slider in a variable 'classifier'.
+classifier = st.sidebar.selectbox("Classifier", 
+                                 ('Support Vector Machine', 'Random Forest Classifier', 'Logistic Regression'))
+
+# Implement SVM with hyperparameter tuning
+# if classifier == 'Support Vector Machine', ask user to input the values of 'C','kernel' and 'gamma'.
+if classifier == 'Support Vector Machine':
+    st.sidebar.subheader("Model Hyperparameters")
+    c_value = st. sidebar.number_input("C (Error Rate)", 1, 100, step = 1)
+    kernel_input = st.sidebar.radio("Kernel", ("linear", "rbf", "poly"))
+    gamma_input = st. sidebar.number_input("Gamma", 1, 100, step = 1)
+
+    if st.sidebar.button('Classify'):
+        st.subheader("Support Vector Machine")
+        svc_model=SVC(C = c_value, kernel = kernel_input, gamma = gamma_input)
+        svc_model.fit(X_train,y_train)
+        y_pred = svc_model.predict(X_test)
+        accuracy = svc_model.score(X_test, y_test)
+        glass_type = prediction(svc_model, ri, na, mg, al, si, k, ca, ba, fe)
+        st.write("The Type of glass predicted is:", glass_type)
+        st.write("Accuracy", accuracy.round(2))
+        plot_confusion_matrix(svc_model, X_test, y_test)
+        st.pyplot()
+
+# Random Forest Classifier
+if classifier == 'Random Forest Classifier':
+    st.sidebar.subheader("Model Hyperparameters")
+    n_estimators_input = st.sidebar.number_input("Number of trees in the forest", 100, 5000, step = 10)
+    max_depth_input = st.sidebar.number_input("Maximum depth of the tree", 1, 100, step = 1)
+        
+    if st.sidebar.button('Classify'):
+        st.subheader("Random Forest Classifier")
+        rf_clf = RandomForestClassifier(n_estimators = n_estimators_input, max_depth = max_depth_input, n_jobs = -1)
+        rf_clf.fit(X_train,y_train)
+        accuracy = rf_clf.score(X_test, y_test)
+        glass_type = prediction(rf_clf, ri, na, mg, al, si, k, ca, ba, fe)
+        st.write("The Type of glass predicted is:", glass_type)
+        st.write("Accuracy", accuracy.round(2))
+        plot_confusion_matrix(rf_clf, X_test, y_test)
+        st.pyplot()
