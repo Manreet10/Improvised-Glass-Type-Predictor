@@ -232,7 +232,7 @@ if classifier == 'Random Forest Classifier':
 # S1.1: Implement Logistic Regression with hyperparameter tuning
 if classifier == 'Logistic Regression':
     st.sidebar.subheader("Model Hyperparameters")
-    c_value  = std.sidebar.number_input("C",1,,100,step = 1)
+    c_value  = std.sidebar.number_input("C",1,100,step = 1)
     max_depth_input = st.sidebar.number_input("Maximum iteration", 10, 1000, step = 10)
         
     if st.sidebar.button('Classify'):
