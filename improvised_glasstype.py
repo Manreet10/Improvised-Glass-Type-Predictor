@@ -237,7 +237,7 @@ if classifier == 'Logistic Regression':
         
     if st.sidebar.button('Classify'):
         st.subheader("Logistic Regression")
-        log_reg = Logistic Regression(C = c_value,max_iter = max_depth_input)
+        log_reg = LogisticRegression(C = c_value,max_iter = max_depth_input)
         log_reg.fit(X_train,y_train)
         accuracy = log_reg.score(X_test, y_test)
         glass_type = prediction(log_reg, ri, na, mg, al, si, k, ca, ba, fe)
